@@ -13,7 +13,7 @@
 #define FIRST_ARG (-1)
 #define SECOND_ARG (-2)
 #define THIRD_ARG (-3)
-#define FORTH_ARG (-4)
+#define FOURTH_ARG (-4)
 
 /// @brief	The lua variable API list[]=.
 static const lua_bind_var lua_var_api_list[]=   ///< The lua variable API list[]=
@@ -74,7 +74,7 @@ static const lua_bind_func lua_c_api_list[] =   ///< The lua c API list[]
 	{.lua_func_name="systime", .lua_c_api=&lua_get_systime },
 	{.lua_func_name="set_bus", .lua_c_api=&lua_set_bus },
 	{.lua_func_name="get_bus", .lua_c_api=&lua_get_bus},
-	{ NULL, NULL},
+	{.lua_func_name=NULL},
 };
 
 /**********************************************************************************************//**
@@ -92,15 +92,15 @@ static const lua_bind_func lua_c_api_list[] =   ///< The lua c API list[]
 
 void lua_load_modules (IDSIMMODEL* this)
 {
-	if ( luaL_loadbufferx(this->luactx, module_bus_mod, module_bus_mod_len, "bus_class", NULL))
+	if ( luaL_loadbufferx(this->luactx, module_bus_mod, (size_t)module_bus_mod_len, "bus_class", NULL))
 	{
 		PRINT(this, "Failed to load module");
 	}
-	if ( luaL_loadbufferx(this->luactx, module_events_mod, module_events_mod_len, "events_class", NULL))
+	if ( luaL_loadbufferx(this->luactx, module_events_mod, (size_t)module_events_mod_len, "events_class", NULL))
 	{
 		PRINT(this, "Failed to load module");
 	}	
-	if ( luaL_loadbufferx(this->luactx, device_mod, device_mod_len, "precompiled_device", NULL))
+	if ( luaL_loadbufferx(this->luactx, device_mod, (size_t)device_mod_len, "precompiled_device", NULL))
 	{
 		PRINT(this, "Failed to load module");
 	}
@@ -339,7 +339,7 @@ lua_get_num_param ( lua_State* L )
 	safe_execute ( L, &lua_get_num_param );
 	char* str = ( char* ) lua_tostring ( L, FIRST_ARG );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushinteger ( L, get_num_param ( this, str )  );
+	lua_pushinteger ( L, (lua_Integer)get_num_param ( this, str )  );
 	return 1;
 }
 
@@ -412,7 +412,7 @@ static int
 lua_delete_popup ( lua_State* L )
 {
 	safe_execute ( L, &lua_delete_popup );
-	ptrdiff_t id = lua_tointeger ( L, FIRST_ARG );
+	ptrdiff_t id = (ptrdiff_t)lua_tointeger ( L, FIRST_ARG );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	delete_popup ( this, id );
 	return 0;
@@ -491,8 +491,8 @@ lua_dump_to_debug_popup ( lua_State* L )
 	lua_Number offset = luaL_checknumber ( L,FIRST_ARG );
 	lua_Number size = luaL_checknumber ( L,SECOND_ARG );
 	const char* buf = luaL_checkstring ( L,THIRD_ARG );
-	void* popup = lua_touserdata ( L, FORTH_ARG );
-	dump_to_debug_popup ( popup, ( BYTE* ) buf, offset, size );
+	void* popup = lua_touserdata ( L, FOURTH_ARG );
+	dump_to_debug_popup ( popup, ( BYTE* ) buf, (uint32_t)offset, (uint32_t)size );
 	return 0;
 }
 
@@ -622,7 +622,7 @@ lua_set_memory_popup ( lua_State* L )
 	lua_Number size = luaL_checknumber ( L,FIRST_ARG );
 	const char* buf = luaL_checkstring ( L,SECOND_ARG );
 	void* popup = lua_touserdata ( L, THIRD_ARG );
-	set_memory_popup ( popup, 0, ( void* ) buf, size );
+	set_memory_popup ( popup, 0, ( void* ) buf, (size_t)size );
 
 	return 0;
 }
@@ -698,7 +698,7 @@ static int
 lua_state_to_string ( lua_State* L )
 {
 	safe_execute ( L, &lua_state_to_string );
-	ptrdiff_t state = lua_tointeger ( L, FIRST_ARG );
+	ptrdiff_t state = (ptrdiff_t)lua_tointeger ( L, FIRST_ARG );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 
 	lua_pushstring ( L,  state_to_string ( state ) );
@@ -824,10 +824,12 @@ static int
 lua_set_callback ( lua_State* L )
 {
 	safe_execute ( L, &lua_set_callback );
-	lua_Number picotime = lua_tointeger ( L, SECOND_ARG );
-	lua_Number eventid = lua_tointeger ( L, FIRST_ARG );
+//	lua_Number picotime = lua_tointeger(L, SECOND_ARG);
+//	lua_Number eventid = lua_tointeger(L, FIRST_ARG);
+	lua_Number picotime = lua_tonumber(L, SECOND_ARG);
+	lua_Number eventid = lua_tonumber(L, FIRST_ARG);
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	set_callback ( this, picotime, eventid );
+	set_callback ( this, (RELTIME)picotime, (EVENTID)eventid );
 	return 0;
 }
 

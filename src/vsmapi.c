@@ -10,8 +10,12 @@
 
 #include "vsmapi.h"
 
+#ifndef __APPNAME
+#define __APPNAME "OpenVSM"
+#endif
+
 #ifndef __VERSION
-#define __VERSION "0.3"
+#define __VERSION "1.0"
 #endif
 
 /** \brief	The vsm device vtable. */
@@ -65,7 +69,7 @@ IDSIMMODEL* __CDECL__
 createdsimmodel ( char* device, ILICENCESERVER* ils )
 {
 	( void ) device;
-	srand ( time ( 0 ) );
+	srand ( (unsigned int)time ( 0 ) );
 	if ( 0 == vsm_register ( ils ) )
 	{
 		return NULL;
@@ -170,7 +174,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	lua_getglobal ( this->luactx,"__USE_PRECOMPILED" );
 	if ( '?' == *device_script && lua_isinteger ( this->luactx,lua_gettop ( this->luactx ) ) )
 	{
-		print_info ( this, "%s started [OpenVSM %s, precompiled device script] %s", get_device_id ( this ), __VERSION, LUA_RELEASE );
+		print_info ( this, "%s started [" __APPNAME " %s, precompiled device script] %s", get_device_id ( this ), __VERSION, LUA_RELEASE );
 	}
 	else
 	{
@@ -178,7 +182,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		{
 			return;
 		}
-		print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
+		print_info ( this, "%s started [" __APPNAME " %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
 	}	
 	
 	lua_getglobal ( this->luactx,"device_init" );
@@ -206,7 +210,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		return;
 	}
 	lua_len ( this->luactx, -1 );
-	int32_t pin_number = lua_tointeger ( this->luactx, -1 );
+	int32_t pin_number = (int32_t)lua_tointeger ( this->luactx, -1 );
 	if ( !pin_number )
 	{
 		print_warning ( this, "IC has no pins" );
@@ -260,7 +264,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	}
 	else
 	{
-		int ltype = lua_tointeger ( this->luactx,-1 );
+		int ltype = (int)lua_tointeger ( this->luactx,-1 );
 #ifdef __DEBUG
 		print_info ( this, "IC type was set to %s", logic_type_to_string ( ltype ) );
 #endif
@@ -339,10 +343,8 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 	switch ( mode )
 	{
 		case RM_BATCH:
-		
 			break;
 		case RM_START:
-		
 			break;
 		case RM_STOP:
 			break;
@@ -351,28 +353,20 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 		case RM_ANIMATE:
 			break;
 		case RM_STEPTIME:
-		
 			break;
 		case RM_STEPOVER:
-		
 			break;
 		case RM_STEPINTO:
-		
 			break;
 		case RM_STEPOUT:
-		
 			break;
 		case RM_STEPTO:
-		
 			break;
 		case RM_META:
-		
 			break;
 		case RM_DUMP:
-		
 			break;
 	}
-	
 }
 
 /**********************************************************************************************//**

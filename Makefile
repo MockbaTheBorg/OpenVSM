@@ -1,51 +1,35 @@
-LUATOOLS=""
-
-ifdef SystemRoot
-   MAKE=mingw32-make
-   RM = rm -f
-   CP = copy
-   LUATOOLS=win32lua
-   FixPath = $(subst /,\,$1)
-else
-	ifeq ($(shell uname), Linux)
-	  RM = rm -f
-	  CP = cp
-      MAKE=make
-      FixPath = $1
-      LUATOOLS=linlua   
-	else ifeq ($(OS), Windows_NT)
-      MAKE=mingw32-make
-   	  RM = rm -f
-   	  CP = copy
-   	  LUATOOLS=win32lua
-   	  FixPath = $(subst /,\,$1)
-	endif
-endif
-
 all:
 	mkdir -p tools
 	mkdir -p dll
-	$(MAKE) tools
-	$(MAKE) $(LUATOOLS)
-	$(MAKE) -C src
+	make tools
+	make lua
+	make -C src
+
+distclean:
+	rm -f dll/*
+	rm -f lib/*
+	rm -f tools/*
+	rm -f lua/*.exe
+	rm -f lua/*.dll
+	rm -f lua/*.a
+	find . -name *.o -exec rm -f {} +
+	find . -name *.mod -exec rm -f {} +
+	find . -name *.mod.c -exec rm -f {} +
+	find . -name Debug -exec rm -rf {} +
+	find . -name Release -exec rm -rf {} +
+	cp proteus/*.pdsprj dll/
 
 clean:
-	$(MAKE) -C bin2source clean
-	$(MAKE) -C src clean
-	$(MAKE) -C externals/lua-5.3.1/src clean
-	$(RM) tools/*
+	rm -f tools/*
+	make -C bin2source clean
+	make -C lua clean
+	make -C src clean
 
 tools:
-	$(MAKE) -C bin2source
+	make -C bin2source
 
-linlua:
-	$(MAKE) -C externals/lua-5.3.1/src linux
-	cp externals/lua-5.3.1/src/luac.exe tools/
-	$(MAKE) -C externals/lua-5.3.1/src clean
-	$(MAKE) -C externals/lua-5.3.1/src mingw
+lua:
+	make -C lua mingw
+	cp lua/luac.exe tools/	
 
-win32lua:
-	$(MAKE) -C externals/lua-5.3.1/src win32
-	cp externals/lua-5.3.1/src/luac.exe tools/	
-
-.PHONY: all clean tools
+.PHONY: all distclean clean tools lua

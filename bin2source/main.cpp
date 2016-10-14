@@ -8,10 +8,10 @@
 
 #define MAX_PATH 255
 
-#ifdef _WIN32
-#define DELIM '\\'
-#else
+#ifdef __MINGW32__
 #define DELIM '/'
+#else
+#define DELIM '\\'
 #endif
 
 /** \brief	The filename[ maximum path]. */
@@ -63,7 +63,7 @@ char
 void
 make_ident(char* name)
 {	
-	strncpy(filename, fbasename(name), sizeof filename);	
+	strncpy(&filename[0], fbasename(name), sizeof filename);	
 	for (char *p = filename; *p; p++)
 	{
 		if (!isalnum(*p)) 
@@ -76,12 +76,6 @@ int
 main(int argc, char* argv[])
 {	
 	unsigned char buf[BUFSIZ];
-
-//	if (argc < 2)
-	{
-	//	fprintf(stderr, "Usage: %s binary_file > output_file\n", argv[0]);
-	//	return -1;
-	}
 
 	FILE *fd = fopen(argv[1], "rb");
 	if (!fd)
@@ -112,6 +106,6 @@ main(int argc, char* argv[])
 		}
 	}
 	printf("\n};\n");
-	printf("const unsigned long long %s_len = %zu;\n", filename, totalsize);	
+	printf("const unsigned long long %s_len = %u;\n", filename, totalsize);	
 	return 0;
 }

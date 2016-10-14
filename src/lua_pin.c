@@ -114,7 +114,7 @@ static int get_pin_self ( lua_State* L )
 	}
 	lua_pushstring ( L, TEXT_PIN_FIELD ); ///this fields contains pin index
 	lua_gettable ( L, - lua_gettop ( L )  ); //take the first element
-	return lua_tointeger ( L, -1 );
+	return (int)lua_tointeger ( L, -1 );
 }
 
 /**********************************************************************************************//**
@@ -219,7 +219,7 @@ static int pin_set ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
-	int value = lua_tointeger ( L, -2 );
+	int value = (int)lua_tointeger ( L, -2 );
 	set_pin_bool ( model, model->device_pins[pin_num], value );
 	return 0;
 }
@@ -388,7 +388,7 @@ static int pin_set_state ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
-	int pin_state = lua_tointeger ( L, -1 );
+	int pin_state = (int)lua_tointeger ( L, -1 );
 	set_pin_state ( model, model->device_pins[pin_num], pin_state );
 	return 0;
 }

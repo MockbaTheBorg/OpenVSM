@@ -1,64 +1,17 @@
-OpenVSM
-=========
-[![Build Status](https://travis-ci.org/Pugnator/openvsm.svg?branch=testing)](https://travis-ci.org/Pugnator/openvsm)
+##OpenVSM - Redux##
 
-![Openvsm logo by 4eRt0vKa](logo.png)
+This fork of Pugnator's OpenVSM was created by be just as a cleanup of the code and Visual Studio's project files.<br>
+The objective of this fork is only to make OpenVSM cleanly buildable on Visual Studio 2015 (and later).
 
-OpenVSM is a model sumulation engine with C and Lua API for Proteus 7/8 CAD
+The folder arrangement was modified to my preference, just to make it easier to integrate with other projects I have on the same filesystem.
 
-![Lua logo](http://www.lua.org/images/powered-by-lua.gif)
+I have also modified the Makefiles to make it cleanly buildable using TDM-GCC-W32 under a msys2 environment.
 
-Powered by Lua http://www.lua.org/
+The Lua version was also updated to the latest 5.3.3.
 
-Documentation can be found at http://pugnator.github.io/openvsm
+Other than these changes, there is no other change to the code, and it is exactly the same as Pugnator's original.
 
-Prebuild DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
+To obtain documentation and more information on how to use OpenVSM, please visit Pugnator's GitHub page.<br>
+See also the LICENSE file for licensing details.
 
-Written in C and gcc-ready (mingw/cygwin) for Linux and Windows
-
-  - You don't need to recompile anything - one DLL for all models in Lua
-  - You can create your model as a standalone DLL or use DLL and Lua script together while prototyping
-  - You can write your own Lua scripts that will be precompiled and built-in into DLL
-  - Function prototypes have similar syntax in C and Lua API
-  - Designed with hope to make simulation as simple as possible for electronics enthusiasts
-
-
-Visit 'examples' directory for sample project files. There is no tutorial yet but I'm working on it
-
-Please kindly send all your remarks and ideas to my mail [o o kami (at) ma il.ru] or submit a bug or feature request
-
-There are plenty to do!
-
-Version
-----
-0.2
-
-Generally you need to compile DLL from the sources only if you want to include custom scripts.
-
-Installation
---------------
-
-  - Download OPenVSM MSI installer from `release` section
-  - Run installer and install it
-  - Visit `exmples` for some example projects  
-
-How to build
---------------
-
-  - Install mingw32 and cygwin for you platform
-  - Install Lua 5.3 or higher compiler
-  - Clone: https://github.com/Pugnator/openvsm.git openvsm
-  - Change to the openvsm
-  - Issue "make" command in Linux or "mingw32-make" under Windows
-  - Create environment variable containing path to the script directory,
-issuing the following command:
-
-```bat
-setx LUAVSM "C:\script"
-```
-  - In this case you should place your model script to c:\script directory
-
-License
-----
-
-GPL 2
+All the credit for writing OpenVSM goes to Lavrentiy Ivanov.

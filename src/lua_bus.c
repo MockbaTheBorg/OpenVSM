@@ -28,7 +28,7 @@ int lua_set_bus ( lua_State* L )
 {
 	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	int byte = lua_tointeger ( L, -1 );
+	int byte = (int)lua_tointeger ( L, -1 );
 	lua_pop ( this->luactx, 1 ); //Pop out the byte from the stack
 	
 	if ( 0 == lua_istable ( L, -1 ) )
@@ -37,7 +37,7 @@ int lua_set_bus ( lua_State* L )
 		return 0;
 	}
 	lua_len ( this->luactx, -1 );
-	int32_t pin_number = lua_tointeger ( this->luactx, -1 );
+	int32_t pin_number = (int32_t)lua_tointeger ( this->luactx, -1 );
 	if ( 0 == pin_number )
 	{
 		WARNING ( this, TEXT_BUS_HAS_NO_PINS );
@@ -59,7 +59,7 @@ int lua_set_bus ( lua_State* L )
 	{
 		lua_rawgeti ( this->luactx,-1, i );
 		lua_getfield ( this->luactx,-1, TEXT_PIN_FIELD );
-		int pin = lua_tointeger ( this->luactx, -1 );
+		int pin = (int)lua_tointeger ( this->luactx, -1 );
 		set_pin_bool ( this, this->device_pins[pin], byte >> bit_counter & 1 );
 		lua_pop ( this->luactx, 1 ); //Pop the value
 		lua_pop ( this->luactx, 1 ); //Pop the pin object
@@ -94,7 +94,7 @@ int lua_get_bus ( lua_State* L )
 	/**TODO: Add bus size check here. 32 or 64bit bus max */
 	int data = 0;
 	lua_len ( this->luactx, -1 );
-	int32_t pin_number = lua_tointeger ( this->luactx, -1 );
+	int32_t pin_number = (int32_t)lua_tointeger ( this->luactx, -1 );
 	if ( 0 == pin_number )
 	{
 		WARNING ( this, TEXT_BUS_HAS_NO_PINS );
@@ -106,7 +106,7 @@ int lua_get_bus ( lua_State* L )
 	{
 		lua_rawgeti ( this->luactx,-1, i );
 		lua_getfield ( this->luactx,-1, TEXT_PIN_FIELD );
-		int pin = lua_tointeger ( this->luactx, -1 );
+		int pin = (int)lua_tointeger ( this->luactx, -1 );
 		int bit = get_pin_bool ( this->device_pins[pin] );
 		lua_pop ( this->luactx, 1 ); //Pop the value
 		lua_pop ( this->luactx, 1 ); //Pop the pin object

@@ -367,7 +367,7 @@ IDEBUGPOPUP* create_debug_popup ( IDSIMMODEL* model, const char* title, const in
  * \return	null if it fails, else the new source popup.
  **************************************************************************************************/
 
-IDEBUGPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+ISOURCEPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
 {
 	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
 	cps->caption = ( char* ) title;
@@ -376,7 +376,7 @@ IDEBUGPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const i
 	cps->height = 200;
 	cps->width = 640;
 	cps->id = id;
-	IDEBUGPOPUP* popup = create_popup ( model, cps );
+	ISOURCEPOPUP* popup = create_popup ( model, cps );
 	free ( cps );
 	return popup;
 }
@@ -396,7 +396,7 @@ IDEBUGPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const i
  * \return	null if it fails, else the new status popup.
  **************************************************************************************************/
 
-IDEBUGPOPUP* create_status_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+ISTATUSPOPUP* create_status_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
 {
 	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
 	cps->caption = ( char* ) title;
@@ -405,7 +405,7 @@ IDEBUGPOPUP* create_status_popup ( IDSIMMODEL* model, const char* title, const i
 	cps->height = 200;
 	cps->width = 200;
 	cps->id = id;
-	IDEBUGPOPUP* popup = create_popup ( model, cps );
+	ISTATUSPOPUP* popup = create_popup ( model, cps );
 	free ( cps );
 	return popup;
 }

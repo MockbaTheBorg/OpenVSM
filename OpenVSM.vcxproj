@@ -11,19 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B8525D53-CE22-4C1D-AC09-942CDFE88F62}</ProjectGuid>
-    <RootNamespace>bin2source</RootNamespace>
+    <ProjectGuid>{4BA5BE13-58F9-4D3B-983D-8644563FF209}</ProjectGuid>
+    <RootNamespace>OpenVSM</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>OpenVSM</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -42,17 +43,21 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\tools\</OutDir>
+    <OutDir>dll\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\tools\</OutDir>
+    <OutDir>dll\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)lua;$(SolutionDir)src\modules;$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>lib\Lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -61,14 +66,47 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)lua;$(SolutionDir)src\modules;$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>lib\Lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>@echo "Building Lua modules..."
+for /f %%f in ('dir /b "$(ProjectDir)src\modules\*.lua"') do "$(ProjectDir)tools\luac.exe" -s -o "$(ProjectDir)src\modules\%%~nf.mod" "$(ProjectDir)src\modules\%%f"
+@echo "Building Lua device..."
+for /f %%f in ('dir /b "$(ProjectDir)src\device\*.lua"') do "$(ProjectDir)tools\luac.exe" -s -o "$(ProjectDir)src\device\%%~nf.mod" "$(ProjectDir)src\device\%%f"
+@echo "Converting Lua modules..."
+for /f %%f in ('dir /b "$(ProjectDir)src\modules\*.mod"') do "$(ProjectDir)tools\bin2source.exe" "$(ProjectDir)src\modules\%%f" &gt; "$(ProjectDir)src\modules\%%f.c"
+@echo "Converting Lua devince..."
+for /f %%f in ('dir /b "$(ProjectDir)src\device\*.mod"') do "$(ProjectDir)tools\bin2source.exe" "$(ProjectDir)src\device\%%f" &gt; "$(ProjectDir)src\device\%%f.c"
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\bindings\cbind.c" />
+    <ClCompile Include="src\bindings\luabind.c" />
+    <ClCompile Include="src\device\device.mod.c" />
+    <ClCompile Include="src\lua_bus.c" />
+    <ClCompile Include="src\lua_pin.c" />
+    <ClCompile Include="src\lua_vsmobj.c" />
+    <ClCompile Include="src\modules\module_bus.mod.c" />
+    <ClCompile Include="src\modules\module_custom.mod.c" />
+    <ClCompile Include="src\modules\module_events.mod.c" />
+    <ClCompile Include="src\modules\module_pin.mod.c" />
+    <ClCompile Include="src\utils.c" />
+    <ClCompile Include="src\vsmapi.c" />
+    <ClCompile Include="src\wincompat.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="bin2source\bin2source.vcxproj">
+      <Project>{b8525d53-ce22-4c1d-ac09-942cdfe88f62}</Project>
+    </ProjectReference>
+    <ProjectReference Include="luac\LuaC.vcxproj">
+      <Project>{6c32e49b-7994-40d1-9f36-7a3ff5f121cc}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
