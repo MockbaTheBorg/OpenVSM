@@ -1,4 +1,4 @@
-PROJECT = VSMLua
+PROJECT = OpenVSM
 VERSION = 115
 
 MAKE= make
@@ -40,7 +40,7 @@ CFLAGS:=-O2 -gdwarf-2 -std=gnu99 -g3 \
 
 SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=../lua/liblua.a -lm
+LDFLAGS:=../lua/liblua.a -lm -static-libgcc
 
 OBJ=$(SRC:%.c=%.o) \
 $(MOD)/module_bus.c.o $(MOD)/module_custom.c.o \
