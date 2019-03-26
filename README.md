@@ -1,6 +1,6 @@
 ##OpenVSM - Redux##
 
-This fork of Pugnator's OpenVSM was created by be just as a cleanup of the code and Visual Studio's project files.<br>
+This fork of Pugnator's OpenVSM was created by me just as a cleanup of the code and Visual Studio's project files.<br>
 The objective of this fork is only to make OpenVSM cleanly buildable on Visual Studio 2015 (and later).
 
 The folder arrangement was modified to my preference, just to make it easier to integrate with other projects I have on the same filesystem.
